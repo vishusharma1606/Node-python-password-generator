@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .disclaimer {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Password Generator</h1>
+        <p>Generate secure passwords easily and quickly.</p>
+        <h1>Password Generator</h1>
+        <input type="number" id="length" placeholder="Enter password length" min="1" max="128" oninput="toggleRefreshButton()">
+        <button onclick="generatePassword()">Generate Password</button>
+        <button id="refresh-button" disabled>Refresh Password</button>
+        <p id="result"></p>
+        <p class="disclaimer">Disclaimer: This password generator is for educational purposes only. Always use a trusted password manager for storing your passwords.</p>
+    </div>
+    <script>
+        function generatePassword(length = 12) {
+            fetch(`/generate-password?length=${length}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("result").innerText = `Generated Password: ${data.password}`;
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
+
+        function toggleRefreshButton() {
+            const length = document.getElementById("length").value;
+            document.getElementById("refresh-button").disabled = !length;
+        }
+
+        document.getElementById("refresh-button").addEventListener("click", function() {
+            const length = document.getElementById("length").value || 12;
+            generatePassword(length);
+        });
+    </script>
+</body>
+</html>
